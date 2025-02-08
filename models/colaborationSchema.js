@@ -1,21 +1,21 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const CollaborationSchema = new mongoose.Schema(
   {
     corporate_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'UserCorporate',
+      ref: "Corporate",
       required: true,
     },
     ngo_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'UserNgo',
+      ref: "NGO",
       required: true,
     },
     status: {
-      type: [String], 
-      required: true,
-      default: ['Active'], 
+      type: String,
+      enum: ["Active", "Completed", "Cancelled"],
+      default: "Active",
     },
     funds_allocated: {
       type: Number,
@@ -28,9 +28,7 @@ const CollaborationSchema = new mongoose.Schema(
       min: 0,
     },
   },
-  {
-    timestamps: true, 
-  }
+  { timestamps: true }
 );
 
-module.exports = mongoose.model('Collaboration', CollaborationSchema);
+module.exports = mongoose.model("Collaboration", CollaborationSchema);

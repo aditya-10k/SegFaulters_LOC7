@@ -20,7 +20,7 @@ exports.findNearbyCorporate = async (req, res) => {
                     $minDistance: 10
                 }
             }
-        }).select("-password"); // Exclude password field
+        }).select("-password"); 
 
         res.status(200).json({ message: "Nearby corporates found", data: locations });
 
