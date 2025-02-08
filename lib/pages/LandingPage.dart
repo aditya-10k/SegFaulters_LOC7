@@ -2,7 +2,6 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:segfaultersloc/pages/LoginOption.dart';
 import 'package:segfaultersloc/pages/SignupOption.dart';
-import 'package:segfaultersloc/pages/SigupPageorg.dart';
 
 class Landingpage extends StatefulWidget {
   const Landingpage({super.key});

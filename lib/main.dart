@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:segfaultersloc/pages/HomePage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:segfaultersloc/pages/HomePage.dart'; // Import Homepage
-import 'package:segfaultersloc/pages/LandingPage.dart'; // Import LandingPage
+import 'package:segfaultersloc/pages/LandingPage.dart'; 
 
 void main() {
   runApp(const MyApp());

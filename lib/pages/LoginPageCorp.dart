@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:segfaultersloc/pages/HomePage.dart';
 import 'package:segfaultersloc/pages/SignupCorp.dart';
-import 'package:segfaultersloc/pages/SigupPageorg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginpageCorp extends StatefulWidget {

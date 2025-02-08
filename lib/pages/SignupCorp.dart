@@ -1,10 +1,8 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:segfaultersloc/pages/HomePage.dart';
 import 'package:segfaultersloc/pages/LoginPageCorp.dart';
-import 'package:segfaultersloc/pages/LoginPageOrg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Signupcorp extends StatefulWidget {
