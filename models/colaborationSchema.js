@@ -4,12 +4,12 @@ const CollaborationSchema = new mongoose.Schema(
   {
     corporate_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Corporate",
+      ref: "usercorporates",
       required: true,
     },
     ngo_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "NGO",
+      ref: "userngos",
       required: true,
     },
     status: {
