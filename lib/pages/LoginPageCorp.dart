@@ -43,13 +43,10 @@ class _LoginContainerState extends State<LoginpageCorp> {
         final responseData = json.decode(response.body);
         print('Login successful: ${responseData}');
 
-        final String jwtToken = responseData['token'];
-        final String userId = responseData['user']['id'];
+        final String jwtToken = responseData['token']; 
 
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('auth_token', jwtToken);
-        await prefs.setString('uid', userId);
-        await prefs.setString('role', 'corp');
         
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> Homepage()));
         
@@ -130,7 +127,7 @@ class _LoginContainerState extends State<LoginpageCorp> {
                       height: 20,
                     ),
                     TextFormField(
-                      style: TextStyle(color: Colors.white, fontFamily: 'PixelyB'),
+                      style: TextStyle(color: Colors.white, fontFamily: 'PixelyR'),
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
                       decoration: const InputDecoration(
@@ -154,7 +151,7 @@ class _LoginContainerState extends State<LoginpageCorp> {
                     ),
                     const SizedBox(height: 16.0),
                     TextFormField(
-                      style: TextStyle(color: Colors.white, fontFamily: 'PixelyB'),
+                      style: TextStyle(color: Colors.white, fontFamily: 'PixelyR'),
                       controller: _passwordController,
                       obscureText: true,
                       decoration: const InputDecoration(
@@ -188,7 +185,7 @@ class _LoginContainerState extends State<LoginpageCorp> {
                             'New? Sign In',
                             style: TextStyle(
                               fontFamily: 'intersB',
-                              color: Colors.blueAccent,
+                              color: const Color.fromARGB(255, 12, 64, 154),
                               fontWeight: FontWeight.w500,
                             ),
                           ),

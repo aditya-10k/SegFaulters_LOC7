@@ -41,7 +41,7 @@ class _LoginoptionState extends State<Signupoption> {
                       child: Text(
                         'Signup as NGO',
                         style: TextStyle(
-                          fontFamily: 'PixelyB',
+                          fontFamily: 'PixelyR',
                           fontSize: 20, 
                           color: Colors.white,
                         ),
@@ -70,7 +70,7 @@ class _LoginoptionState extends State<Signupoption> {
                       child: Text(
                         'Signup as Corporation',
                         style: TextStyle(
-                          fontFamily: 'PixelyB',
+                          fontFamily: 'PixelyR',
                           fontSize: 20, 
                           color: Colors.white, 
                         ),
