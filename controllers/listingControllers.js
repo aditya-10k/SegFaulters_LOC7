@@ -1,4 +1,5 @@
-const Listing = require("../models/Listings");
+const Listing = require("../models/listingSchema");
+const UserNgo = require('../models/ngoSchema');  // Assuming the model file is named ngoModel.js
 
 // Create a new listing
 exports.createListing = async (req, res) => {

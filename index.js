@@ -16,7 +16,7 @@ server.use(express.json());
 server.use(cookieParser());
 server.use(cors());
 //Listings
-server.use('/api/listings', listings)
+server.use('/api/listing', listings)
 server.use('/api/auth', authRoutes);
 server.use('/api/geoR', geoRoutes);
 server.use('/api/data', dataRoutes);

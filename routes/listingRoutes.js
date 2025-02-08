@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const listingsController = require("../controllers/listingsController");
+const listingsController = require("../controllers/listingControllers");
 
 // Create a listing (POST)
 router.post("/create", listingsController.createListing);
@@ -9,7 +9,7 @@ router.post("/create", listingsController.createListing);
 router.get("/getList/:id", listingsController.getListingById);
 
 // Update a listing by ID (PUT)
-router.put("/updatList/:id", listingsController.updateListing);
+router.put("/updateList/:id", listingsController.updateListing);
 
 // Delete a listing by ID (DELETE)
 router.delete("/deleteList/:id", listingsController.deleteListing);

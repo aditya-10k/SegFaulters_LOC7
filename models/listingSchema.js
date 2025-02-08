@@ -4,7 +4,7 @@ const Listings = new mongoose.Schema(
   {
     ngo_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "userngos", 
+      ref: "UserNgo", 
       required: true,
     },
     title: {
