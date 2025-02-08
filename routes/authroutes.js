@@ -1,6 +1,6 @@
 
 const express = require('express');
-const { registerUser, loginUser,logout } = require('../controllers/authcontroller');
+const { registerUserCorporate, registerUserNgo, loginNgo,loginCorporate,logout } = require('../controllers/authcontroller');
 
 const router = express.Router();
 
@@ -11,9 +11,10 @@ router.get("/default-route",  (req, res) => {
 });
 
 
-router.post('/register', registerUser);
-router.post('/login', loginUser);
-
+router.post('/registerCorporate', registerUserCorporate);
+router.post('/registerNgo', registerUserNgo);
+router.post('/loginNgo', loginNgo);
+router.post('/loginCorporate', loginCorporate);
 router.post('/logout', logout);
 
 

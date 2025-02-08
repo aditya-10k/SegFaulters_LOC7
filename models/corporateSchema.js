@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 
 const CorporateSchema = new mongoose.Schema(
   {
-  name: {
+    name: {
       type: String,
       required: [true, 'Full name is required'],
       trim: true,
@@ -19,16 +19,36 @@ const CorporateSchema = new mongoose.Schema(
       minlength: [6, 'Password must be at least 6 characters long'],
       required: true,
     },
+    phone: {
+      type: String,
+      required: [true, 'Phone number is required'],
+      match: [/^\d{10,15}$/, 'Please provide a valid phone number'],
+    },
     address: {
       type: String,
       required: [true, 'Address is required'],
       trim: true,
+    },
+    sectors: {
+      type: [String],
+      required: [true, 'At least one sector is required'],
+    },
+    description: {
+      type: String,
+      maxlength: [500, 'Description cannot exceed 500 characters'],
+      trim: true,
+    },
+    csr_budget: {
+      type: Number,
+      required: [true, 'CSR Budget is required'],
+      min: [0, 'CSR Budget cannot be negative'],
     },
   },
   {
     timestamps: true,
   }
 );
+
 CorporateSchema.pre('save', async function (next) {
   if (this.isModified('password')) {
     try {
@@ -41,9 +61,4 @@ CorporateSchema.pre('save', async function (next) {
   next();
 });
 
-
-
 module.exports = mongoose.model('UserCorporate', CorporateSchema);
-
-
-
