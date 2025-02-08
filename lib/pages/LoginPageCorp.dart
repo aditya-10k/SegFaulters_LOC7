@@ -201,7 +201,9 @@ class _LoginContainerState extends State<LoginpageCorp> {
                             backgroundColor: MaterialStateProperty.all(Colors.white.withOpacity(0.3)),
                           ),
                           onPressed: _login,
-                          child: const Text('Login'),
+                          child: const Text(
+                            'Login',
+                            style: TextStyle(fontFamily: 'PixelyR')),
                         ),
                       ],
                     ),
