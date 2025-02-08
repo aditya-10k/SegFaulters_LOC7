@@ -1,7 +1,8 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:segfaultersloc/pages/LoginPage.dart';
-import 'package:segfaultersloc/pages/SigupPage.dart';
+import 'package:segfaultersloc/pages/LoginOption.dart';
+import 'package:segfaultersloc/pages/SignupOption.dart';
+import 'package:segfaultersloc/pages/SigupPageorg.dart';
 
 class Landingpage extends StatefulWidget {
   const Landingpage({super.key});
@@ -12,6 +13,8 @@ class Landingpage extends StatefulWidget {
 
 class _LandingpageState extends State<Landingpage> {
   bool _showJoinUsButton = false;
+  bool _isLoginHovered = false;
+  bool _isSignupHovered = false;
 
   @override
   void initState() {
@@ -73,7 +76,7 @@ class _LandingpageState extends State<Landingpage> {
                     child: Column(
                       children: [
                         SizedBox(
-                          height: 60,
+                          height: 100,
                         ),
                         Text(
                           'Join us now!',
@@ -90,40 +93,90 @@ class _LandingpageState extends State<Landingpage> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              InkWell(
-                                onTap: () {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) =>Loginpage()));
+                              MouseRegion(
+                                onEnter: (_) {
+                                  setState(() {
+                                    _isLoginHovered = true;
+                                  });
                                 },
-                                child: Container(
-                                  padding: EdgeInsets.all(12),
-                                  decoration: BoxDecoration(
+                                onExit: (_) {
+                                  setState(() {
+                                    _isLoginHovered = false;
+                                  });
+                                },
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.push(context, MaterialPageRoute(builder: (builder)=> Loginoption()));
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
                                       border: Border.all(color: Colors.white),
-                                      borderRadius: BorderRadius.circular(20)),
-                                  child: Text(
-                                    'Login',
-                                    style: TextStyle(
+                                      gradient: _isLoginHovered
+                                          ? LinearGradient(
+                                            begin: Alignment.topCenter,
+                                            end: Alignment.bottomCenter,
+                                              colors: [
+                                              
+                                                Color(0xFF498EE9),
+                                                Color(0xFFB674B2),
+                                              ],
+                                            )
+                                          : null,
+                                    ),
+                                    child: Text(
+                                      'Login',
+                                      style: TextStyle(
                                         fontSize: 25,
                                         fontFamily: 'PixelyR',
-                                        color: Colors.white),
+                                        color: Colors.white,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
                               SizedBox(width: 20),
-                              InkWell(
-                                onTap: () {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) =>Signuppage()));
+                              MouseRegion(
+                                onEnter: (_) {
+                                  setState(() {
+                                    _isSignupHovered = true;
+                                  });
                                 },
-                                child: Container(
-                                  padding: EdgeInsets.all(12),
-                                  decoration: BoxDecoration(
+                                onExit: (_) {
+                                  setState(() {
+                                    _isSignupHovered = false;
+                                  });
+                                },
+                                child: InkWell(
+                                  onTap: (){
+                                    Navigator.push(context, MaterialPageRoute(builder: (builder)=> Signupoption()));
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
                                       border: Border.all(color: Colors.white),
-                                      borderRadius: BorderRadius.circular(20)),
-                                  child: Text(
-                                    'Signup',
-                                    style: TextStyle(
+                                      gradient: _isSignupHovered
+                                          ? LinearGradient(
+                                            begin: Alignment.topCenter,
+                                            end: Alignment.bottomCenter,
+                                              colors: [
+                                               
+                                                Color(0xFF498EE9),
+                                                Color(0xFFB674B2),
+                                              ],
+                                            )
+                                          : null,
+                                    ),
+                                    child: Text(
+                                      'Signup',
+                                      style: TextStyle(
                                         fontSize: 25,
                                         fontFamily: 'PixelyR',
-                                        color: Colors.white),
+                                        color: Colors.white,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -140,13 +193,13 @@ class _LandingpageState extends State<Landingpage> {
             right: 10,
             bottom: 10,
             child: Container(
-                    height: 50,
-                    width: 50,
-                    child: Opacity(
-                      opacity: 0.4,
-                      child: Image.asset('assets/logo.png',
-                      ),
-                    )),
+              height: 50,
+              width: 50,
+              child: Opacity(
+                opacity: 0.4,
+                child: Image.asset('assets/logo.png'),
+              ),
+            ),
           )
         ],
       ),

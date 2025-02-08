@@ -11,4 +11,9 @@ class AppColors {
   static const Color periwinkle = Color(0xFF8990F0);
   static const Color mauve = Color(0xFFA96591);
   static const Color deepOlive = Color(0xFF456022);
+  static const Color darkTeal = Color(0xFF130170);
+  static const Color mintGreen = Color(0xFFCDF4DC);
+  static const Color vibrantCyan = Color(0xFF01949A);
+  static const Color deepRed = Color(0xFFCD0046);
+
 }
