@@ -44,9 +44,12 @@ class _LoginContainerState extends State<LoginpageCorp> {
         print('Login successful: ${responseData}');
 
         final String jwtToken = responseData['token']; 
+        final String userId = responseData['user']['id'];
 
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('auth_token', jwtToken);
+        await prefs.setString('uid', userId);
+        await prefs.setString('role', 'corp');
         
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> Homepage()));
         
