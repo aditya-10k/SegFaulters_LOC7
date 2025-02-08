@@ -1,5 +1,6 @@
 import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:segfaultersloc/pages/ListPage.dart';
 import 'package:segfaultersloc/pages/MainPage.dart';
 import 'package:segfaultersloc/pages/ProfilePage.dart';
@@ -14,6 +15,58 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   final PageController _pageController = PageController();
   int _currentIndex = 0;
+  String _locationMessage = "";
+
+   @override
+  void initState() {
+    super.initState();
+    _getLocation();
+  }
+
+  // Step 4: Check and get location
+  Future<void> _getLocation() async {
+    // Step 5: Check if location services are enabled
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      setState(() {
+        _locationMessage = "Location services are disabled.";
+      });
+      return;
+    }
+
+    // Step 6: Request location permissions
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        setState(() {
+          _locationMessage = "Location permissions are denied.";
+        });
+        return;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      setState(() {
+        _locationMessage =
+            "Location permissions are permanently denied, we cannot request permissions.";
+      });
+      return;
+    }
+
+    // Step 7: Get the current position (coordinates)
+    Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+    setState(() {
+      _locationMessage =
+          "Latitude: ${position.latitude}, Longitude: ${position.longitude}";
+          print(_locationMessage);
+    });
+  }
 
   void _navigateToPage(int index) {
     setState(() {

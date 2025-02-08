@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:segfaultersloc/pages/HomePage.dart';
 import 'package:segfaultersloc/pages/LoginPageOrg.dart';
@@ -45,7 +46,68 @@ class _SignuporgState extends State<Signuporg> {
     super.dispose();
   }
 
+  double? _latitude;
+  double? _longitude;
+  String _locationMessage = "";
+
+  @override
+  void initState() {
+    super.initState();
+    _getLocation();
+  }
+
+  Future<void> _getLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      setState(() {
+        _locationMessage = "Location services are disabled.";
+      });
+      return;
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        setState(() {
+          _locationMessage = "Location permissions are denied.";
+        });
+        return;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      setState(() {
+        _locationMessage =
+            "Location permissions are permanently denied, we cannot request permissions.";
+      });
+      return;
+    }
+
+    Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+
+    setState(() {
+      _latitude = position.latitude;
+      _longitude = position.longitude;
+      print("Location: Lat=$_latitude, Long=$_longitude");
+    });
+  }
+
   Future<void> _registerNgo() async {
+    if (_latitude == null || _longitude == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text('Fetching location, please try again.'),
+            backgroundColor: Colors.red),
+      );
+      return;
+    }
+
     final url = Uri.parse('http://localhost:5000/api/auth/registerNgo');
 
     try {
@@ -59,7 +121,9 @@ class _SignuporgState extends State<Signuporg> {
           'address': _addressController.text,
           'phone': _phoneController.text,
           'sectors': _selectedSectors,
-          'description': '',
+          'description': _descriptionController.text,
+          'latitude': _latitude,
+          'longitude': _longitude,
         }),
       );
 
@@ -70,12 +134,15 @@ class _SignuporgState extends State<Signuporg> {
               backgroundColor: Colors.green),
         );
         final responseData = json.decode(response.body);
-        print('Login successful: ${responseData}');
+        print('Login successful: $responseData');
 
         final String jwtToken = responseData['token'];
+        final String userId = responseData['user']['id'];
 
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('auth_token', jwtToken);
+        await prefs.setString('uid', userId);
+        await prefs.setString('role', 'org');
 
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => Homepage()));

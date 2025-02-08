@@ -11,6 +11,20 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  String? userRole;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkUserRole();
+  }
+
+  Future<void> _checkUserRole() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userRole = prefs.getString('role') ?? 'guest';
+    });
+  }
 
   Future<void> _logout() async {
     try {
@@ -30,7 +44,6 @@ class _ProfilePageState extends State<ProfilePage> {
       );
     } catch (error) {
       print('Error during logout: $error');
-      // Show error snackbar
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('An error occurred while logging out'),
@@ -44,20 +57,87 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return PageBackground(
       overlayColor: Colors.red,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            "Profile Page",
-            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white),
-          ),
-          SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () {_logout();},
-            child: Text("Logout"),
-          ),
-        ],
+      child: Center(
+        child: userRole == null
+            ? CircularProgressIndicator()
+            : userRole == 'corp'
+                ? CorpProfile(logoutCallback: _logout)
+                : userRole == 'org'
+                    ? OrgProfile(logoutCallback: _logout)
+                    : GuestProfile(logoutCallback: _logout),
       ),
+    );
+  }
+}
+
+class CorpProfile extends StatelessWidget {
+  final VoidCallback logoutCallback;
+
+  const CorpProfile({super.key, required this.logoutCallback});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          "Corporate Profile",
+          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white),
+        ),
+        SizedBox(height: 20),
+        ElevatedButton(
+          onPressed: logoutCallback,
+          child: Text("Logout"),
+        ),
+      ],
+    );
+  }
+}
+
+class OrgProfile extends StatelessWidget {
+  final VoidCallback logoutCallback;
+
+  const OrgProfile({super.key, required this.logoutCallback});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          "NGO Profile",
+          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white),
+        ),
+        SizedBox(height: 20),
+        ElevatedButton(
+          onPressed: logoutCallback,
+          child: Text("Logout"),
+        ),
+      ],
+    );
+  }
+}
+
+class GuestProfile extends StatelessWidget {
+  final VoidCallback logoutCallback;
+
+  const GuestProfile({super.key, required this.logoutCallback});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          "Welcome, Guest",
+          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white),
+        ),
+        SizedBox(height: 20),
+        ElevatedButton(
+          onPressed: logoutCallback,
+          child: Text("Logout"),
+        ),
+      ],
     );
   }
 }

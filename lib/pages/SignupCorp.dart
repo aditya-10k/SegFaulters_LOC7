@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:segfaultersloc/pages/HomePage.dart';
 import 'package:segfaultersloc/pages/LoginPageCorp.dart';
@@ -21,7 +22,7 @@ class _SignupcorpState extends State<Signupcorp> {
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-    final TextEditingController _csrbudcontroller = TextEditingController();
+  final TextEditingController _csrbudcontroller = TextEditingController();
 
   final List<String> _sectorOptions = [
     "Educational",
@@ -47,6 +48,58 @@ class _SignupcorpState extends State<Signupcorp> {
     super.dispose();
   }
 
+  double? _latitude;
+  double? _longitude;
+  String _locationMessage = "";
+
+  @override
+  void initState() {
+    super.initState();
+    _getLocation();
+  }
+
+  Future<void> _getLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      setState(() {
+        _locationMessage = "Location services are disabled.";
+      });
+      return;
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        setState(() {
+          _locationMessage = "Location permissions are denied.";
+        });
+        return;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      setState(() {
+        _locationMessage =
+            "Location permissions are permanently denied, we cannot request permissions.";
+      });
+      return;
+    }
+
+    Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+
+    setState(() {
+      _latitude = position.latitude;
+      _longitude = position.longitude;
+      print("Location: Lat=$_latitude, Long=$_longitude");
+    });
+  }
+
   Future<void> _registerNgo() async {
     final url = Uri.parse('http://localhost:5000/api/auth/registerCorporate');
 
@@ -62,7 +115,9 @@ class _SignupcorpState extends State<Signupcorp> {
           'address': _addressController.text,
           'sectors': _selectedSectors,
           'description': '',
-          'csr_budget' : _csrbudcontroller.text
+          'csr_budget': _csrbudcontroller.text,
+          'latitude': _latitude,
+          'longitude': _longitude
         }),
       );
 
@@ -76,9 +131,12 @@ class _SignupcorpState extends State<Signupcorp> {
         print('Login successful: ${responseData}');
 
         final String jwtToken = responseData['token'];
+        final String userId = responseData['user']['id'];
 
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('auth_token', jwtToken);
+        await prefs.setString('uid', userId);
+        await prefs.setString('role', 'corp');
 
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => Homepage()));
@@ -150,7 +208,7 @@ class _SignupcorpState extends State<Signupcorp> {
                         keyboardType: TextInputType.emailAddress),
                     _buildTextField('Password', _passwordController,
                         obscureText: true),
-                        _buildTextField('Budget', _csrbudcontroller),
+                    _buildTextField('Budget', _csrbudcontroller),
                     _buildTextField('Address', _addressController),
                     _buildTextField('Phone', _phoneController,
                         keyboardType: TextInputType.phone),
