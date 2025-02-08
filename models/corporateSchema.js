@@ -44,6 +44,25 @@ const CorporateSchema = new mongoose.Schema(
       min: [0, 'CSR Budget cannot be negative'],
     },
   },
+  location: {
+      type: {
+        type: String,
+        enum: ["Point"],
+        required: [true, 'Location needed for finding better results for your motive'],
+        trim: true
+      },
+      coordinates: {
+        type: [Number],//Longitude,Latitude
+        required: true,
+        validator: {
+          validator: function (val) {
+            return val.length === 2;
+          },
+          message: "Coordinates must contain only two point[longitude, latitude]"
+        }
+      }
+
+    },
   {
     timestamps: true,
   }
