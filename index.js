@@ -8,6 +8,9 @@ const dataRoutes = require('./routes/dataRoutes')
 const requestRoutes = require('./routes/requestroutes');
 const cookieParser = require('cookie-parser');
 
+//Collab Routes
+const collabRoutes = require("./routes/collabRoutes");
+
 //All Listings here
 const listings = require("./routes/listingRoutes");
 
@@ -15,8 +18,13 @@ const server = express();
 server.use(express.json());
 server.use(cookieParser());
 server.use(cors());
+
 //Listings
-server.use('/api/listing', listings)
+server.use('/api/listing', listings);
+
+//Collab routes
+server.use("/api/collaborations", collabRoutes);
+
 server.use('/api/auth', authRoutes);
 server.use('/api/geoR', geoRoutes);
 server.use('/api/data', dataRoutes);
