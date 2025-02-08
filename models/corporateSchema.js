@@ -44,8 +44,12 @@ const CorporateSchema = new mongoose.Schema(
       type: {
         type: String,
         enum: ["Point"],
+<<<<<<< HEAD
         required: [true, 'Location needed for finding better results for your motive'],
         trim: true,
+=======
+        
+>>>>>>> a5f6285 (Added geospatial querying feature in backend)
       },
       coordinates: {
         type: [Number], // Longitude, Latitude
@@ -60,6 +64,29 @@ const CorporateSchema = new mongoose.Schema(
     },
   },
   {
+<<<<<<< HEAD
     timestamps: true,
   }
 );
+=======
+    timestamps: true, 
+  }
+);
+
+CorporateSchema.index({ location: "2dsphere" });
+
+// Hash password before saving
+CorporateSchema.pre("save", async function (next) {
+  if (this.isModified("password")) {
+    try {
+      const salt = await bcrypt.genSalt(10);
+      this.password = await bcrypt.hash(this.password, salt);
+    } catch (error) {
+      return next(error);
+    }
+  }
+  next();
+});
+
+module.exports = mongoose.model("UserCorporate", CorporateSchema);
+>>>>>>> a5f6285 (Added geospatial querying feature in backend)

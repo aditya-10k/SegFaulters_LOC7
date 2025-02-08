@@ -46,8 +46,8 @@ const NgoSchema = new mongoose.Schema(
         trim: true
       },
       coordinates: {
-        type: [Number],//Longitude,Latitude
-        required: true,
+        type: [Number],
+      
         validator: {
           validator: function (val) {
             return val.length === 2;
@@ -62,6 +62,8 @@ const NgoSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+NgoSchema.index({ location: "2dsphere" });
 
 NgoSchema.pre('save', async function (next) {
   if (this.isModified('password')) {

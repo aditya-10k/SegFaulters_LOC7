@@ -4,10 +4,10 @@ const { generateToken } = require('../config/utils');
 const bcrypt = require('bcryptjs');
 
 exports.registerUserNgo = async (req, res) => {
-    const { name, email, password, address, phone, sectors, description } = req.body;
+    const { name, email, password, address, phone, sectors, description, longitude, latitude } = req.body;
 
     try {
-     
+    
         if (!name || !email || !password || !address || !phone || !sectors) {
             return res.status(400).json({ error: "All fields are required" });
         }
@@ -16,12 +16,29 @@ exports.registerUserNgo = async (req, res) => {
             return res.status(400).json({ error: "Password must be at least 6 characters" });
         }
 
+        if (!latitude || !longitude) {
+            return res.status(400).json({ error: "Both latitude and longitude are compulsory" });
+        }
+
+        
         const existingUser = await UserNgo.findOne({ email });
         if (existingUser) {
             return res.status(400).json({ error: 'Email already registered' });
         }
 
-        const user = new UserNgo({ name, email, password, address, phone, sectors, description });
+        const user = new UserNgo({
+            name,
+            email,
+            password,
+            address,
+            phone,
+            sectors,
+            description,
+            location: {
+                type: "Point",
+                coordinates: [longitude, latitude],
+            },
+        });
 
         await user.save();
 
@@ -39,6 +56,7 @@ exports.registerUserNgo = async (req, res) => {
                 phone: user.phone,
                 sectors: user.sectors,
                 description: user.description,
+                location: user.location,
             },
         });
     } catch (err) {
@@ -46,38 +64,53 @@ exports.registerUserNgo = async (req, res) => {
     }
 };
 
+
 exports.registerUserCorporate = async (req, res) => {
-    const { name, email, password, address, phone, sectors, description, csr_budget } = req.body;
+    const { name, email, password, address, phone, sectors, description, csr_budget, longitude, latitude } = req.body;
 
     try {
-     
+        // Validate required fields
         if (!name || !email || !password || !address || !phone || !sectors || csr_budget === undefined) {
             return res.status(400).json({ error: "All fields are required" });
         }
 
- 
         if (password.length < 6) {
             return res.status(400).json({ error: "Password must be at least 6 characters" });
         }
-
 
         if (isNaN(csr_budget) || csr_budget < 0) {
             return res.status(400).json({ error: "CSR Budget must be a non-negative number" });
         }
 
-        
+        if (!latitude || !longitude) {
+            return res.status(400).json({ error: "Both latitude and longitude are compulsory" });
+        }
+
+        // Check if email already exists
         const existingUser = await UserCorporate.findOne({ email });
         if (existingUser) {
             return res.status(400).json({ error: "Email already registered" });
         }
 
-     
-        const user = new UserCorporate({ name, email, password, address, phone, sectors, description, csr_budget });
+        // Create new corporate user with location
+        const user = new UserCorporate({
+            name,
+            email,
+            password,
+            address,
+            phone,
+            sectors,
+            description,
+            csr_budget,
+            location: {
+                type: "Point",
+                coordinates: [longitude, latitude],
+            },
+        });
 
-     
         await user.save();
 
-       
+        
         const token = generateToken(user._id, res);
 
         res.status(201).json({
@@ -91,7 +124,8 @@ exports.registerUserCorporate = async (req, res) => {
                 phone: user.phone,
                 sectors: user.sectors,
                 description: user.description,
-                csr_budget: user.csr_budget,  
+                csr_budget: user.csr_budget,
+                location: user.location,
             },
         });
     } catch (err) {
@@ -144,7 +178,7 @@ exports.loginNgo = async (req, res) => {
 
         if (!user) {
             return res.status(400).json({ error: 'Invalid email or password' });
-        }
+        } 
 
         const isMatch = await bcrypt.compare(password, user.password);
 
