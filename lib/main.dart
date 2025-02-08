@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:segfaultersloc/pages/LoginPage.dart';
+import 'package:segfaultersloc/pages/LandingPage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'CSR',
       debugShowCheckedModeBanner: false,
-      home: Loginpage(),
+      home:Landingpage(),
     );
   }
 }

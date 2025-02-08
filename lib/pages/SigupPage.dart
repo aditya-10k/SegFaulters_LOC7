@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class Loginpage extends StatefulWidget {
-  const Loginpage({Key? key}) : super(key: key);
+class Signuppage extends StatefulWidget {
+  const Signuppage({Key? key}) : super(key: key);
 
   @override
   _LoginContainerState createState() => _LoginContainerState();
 }
 
-class _LoginContainerState extends State<Loginpage> {
+class _LoginContainerState extends State<Signuppage> {
   final _formKey = GlobalKey<FormState>();
 
   final TextEditingController _emailController = TextEditingController();
@@ -70,7 +70,7 @@ class _LoginContainerState extends State<Loginpage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'Login',
+                    'Signup',
                     style: TextStyle(fontSize: 50,
                     fontFamily: 'PixelyB'),
                   ),
