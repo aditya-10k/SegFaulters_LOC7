@@ -189,7 +189,13 @@ class _CorpProfileState extends State<CorpProfile> {
           padding: EdgeInsets.all(15),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.white)
+            border: Border.all(color: const Color.fromARGB(255, 216, 135, 238), width: 4),
+            boxShadow: [
+              BoxShadow(
+                color: const Color.fromARGB(255, 244, 96, 42).withOpacity(0.2),
+                blurRadius: 10,
+              )
+            ]
           ),
           child: Column(
   crossAxisAlignment: CrossAxisAlignment.start,
@@ -363,13 +369,18 @@ class _CorpProfileState extends State<CorpProfile> {
                   ),
                 ],
               ),
+              SizedBox(height: 20),
             ],
           ),
 
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: widget.logoutCallback,
-                child: Text("Logout"),
+                child: Text(
+                  "Logout",
+                  style: TextStyle(
+                    fontFamily: 'PixelyR'
+                  )),
               ),
             ],
           ),
@@ -495,7 +506,13 @@ class _OrgProfileState extends State<OrgProfile> {
           padding: EdgeInsets.all(15),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.white),
+            border: Border.all(color: const Color.fromARGB(255, 216, 135, 238), width: 4),
+            boxShadow:[
+              BoxShadow(
+                color: const Color.fromARGB(255, 244, 96, 42).withOpacity(0.2),
+                blurRadius: 10,
+              )
+            ]
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -532,7 +549,10 @@ class _OrgProfileState extends State<OrgProfile> {
               // Logout Button
               ElevatedButton(
                 onPressed: widget.logoutCallback,
-                child: Text("Logout"),
+                child: Text(
+                  "Logout",
+                  style: TextStyle(fontFamily: 'PixelyR')
+                  ),
               ),
             ],
           ),

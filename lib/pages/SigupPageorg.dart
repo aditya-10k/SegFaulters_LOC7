@@ -229,7 +229,9 @@ class _SignuporgState extends State<Signuporg> {
                       ),
                       onPressed: _signup,
                       child: const Text('Sign Up',
-                          style: TextStyle(color: Colors.white)),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'PixelyR')),
                     ),
                     const SizedBox(height: 16.0),
                     InkWell(
