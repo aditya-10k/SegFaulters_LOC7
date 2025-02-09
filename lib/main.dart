@@ -1,9 +1,15 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:segfaultersloc/firebase_options.dart';
 import 'package:segfaultersloc/pages/HomePage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:segfaultersloc/pages/LandingPage.dart'; 
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform
+  );
   runApp(const MyApp());
 }
 

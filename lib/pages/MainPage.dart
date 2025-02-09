@@ -1,7 +1,9 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
+import 'package:segfaultersloc/AppColors.dart';
 import 'package:segfaultersloc/pages/HomePage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -55,6 +57,19 @@ class _CorpHomePageState extends State<CorpHomePage> {
   double? _latitude;
   double? _longitude;
   List<dynamic> _nearbyNGOs = [];
+  List<String> _selectedSectors = [];  
+
+  // List of available sectors
+  List<String> sectors = [
+    "Educational",
+    "Healthcare",
+    "Environment",
+    "Skill Development",
+    "Community Development",
+    "Diversity",
+    "Disaster Relief",
+    "Animal Welfare"
+  ];
 
   @override
   void initState() {
@@ -135,43 +150,94 @@ class _CorpHomePageState extends State<CorpHomePage> {
     }
   }
 
+  // Filter NGOs based on the selected sectors
+  List<dynamic> _filterNGOsBySectors() {
+    if (_selectedSectors.isEmpty) {
+      return _nearbyNGOs;
+    }
+    return _nearbyNGOs.where((ngo) => _selectedSectors.contains(ngo['sector'])).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          "Corporate Home",
-          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white),
-        ),
-        SizedBox(height: 20),
-        Text(
-          _locationMessage,
-          style: TextStyle(color: Colors.white),
-        ),
-        SizedBox(height: 20),
-        ElevatedButton(
-          onPressed: () {},
-          child: Text("Corporate Features"),
-        ),
-        SizedBox(height: 20),
-        Text("Nearby NGOs:"),
-        _nearbyNGOs.isEmpty
-            ? Text("No nearby NGOs found.")
-            : ListView.builder(
-                shrinkWrap: true,
-                itemCount: _nearbyNGOs.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(_nearbyNGOs[index]['name'] ?? "No Name"),
-                    subtitle: Text("Distance: ${_nearbyNGOs[index]['distance']} meters"),
-                  );
-                },
+    List<dynamic> filteredNGOs = _filterNGOsBySectors();
+
+    return Scaffold(
+     
+      body: Stack(
+        children: [
+          // Background image
+          Positioned.fill(
+            child: Image.asset(
+              'assets/landingpage.png',  
+              fit: BoxFit.cover,
+            ),
+          ),
+          Positioned.fill(
+            child: Container(
+              color: Colors.lightBlue.withOpacity(0.4),  
+            ),
+          ),
+          Column(
+            children: [
+              SizedBox(height: 200,),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  _locationMessage,
+                  style: TextStyle(color: Colors.white,fontFamily: 'PixelyR'),
+                ),
               ),
-      ],
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Wrap(
+  spacing: 8.0,
+  children: sectors.map((sector) {
+    return ChoiceChip(
+      label: Text(sector),
+      selected: _selectedSectors.contains(sector),
+      onSelected: (isSelected) {
+        setState(() {
+          if (isSelected) {
+            _selectedSectors.add(sector);  
+          } else {
+            _selectedSectors.remove(sector);  
+          }
+        });
+      },
+      backgroundColor: Colors.lightBlue,  
+      selectedColor: AppColors.dustyPink,           
+      labelStyle: TextStyle(color: Colors.white, fontFamily: 'PixelyR'), 
+    );
+  }).toList(),
+)
+              ),
+              Expanded(
+                child: filteredNGOs.isEmpty
+                    ? Center(child: Text("No nearby NGOs found.", style: TextStyle(color: Colors.white)))
+                    : ListView.builder(
+                        itemCount: filteredNGOs.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            
+                            title: Text(filteredNGOs[index]['name'] ?? "No Name", style: TextStyle(color: Colors.white)),
+                            subtitle: Text(
+                              "Sector: ${filteredNGOs[index]['sector']} - Distance: ${filteredNGOs[index]['distance']} meters",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          );
+                        },
+                      ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
+
+
 
 class OrgHomePage extends StatefulWidget {
   @override

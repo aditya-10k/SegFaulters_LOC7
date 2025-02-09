@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "460281868223",
+    "project_id": "segfaulters-b8207",
+    "storage_bucket": "segfaulters-b8207.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:460281868223:android:0859442458d185c07b3b0a",
+        "android_client_info": {
+          "package_name": "com.example.segfaultersloc"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVC0Z95-hw8bKhsJ82uRUIAM_9qfuHlz4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

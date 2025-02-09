@@ -1,5 +1,8 @@
 import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:segfaultersloc/pages/HomePage.dart';
 import 'package:segfaultersloc/pages/LoginPageOrg.dart';
@@ -34,6 +37,51 @@ class _SignuporgState extends State<Signuporg> {
   ];
   final List<String> _selectedSectors = [];
 
+   double? _latitude;
+  double? _longitude;
+  String _locationMessage = "";
+  @override
+  void initState() {
+    super.initState();
+    _getLocation();
+  }
+  Future<void> _getLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      setState(() {
+        _locationMessage = "Location services are disabled.";
+      });
+      return;
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        setState(() {
+          _locationMessage = "Location permissions are denied.";
+        });
+        return;
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      setState(() {
+        _locationMessage =
+            "Location permissions are permanently denied, we cannot request permissions.";
+      });
+      return;
+    }
+    Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+    setState(() {
+      _latitude = position.latitude;
+      _longitude = position.longitude;
+      print("Location: Lat=$_latitude, Long=$_longitude");
+    });
+  }
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -60,8 +108,17 @@ class _SignuporgState extends State<Signuporg> {
           'phone': _phoneController.text,
           'sectors': _selectedSectors,
           'description': '',
+          'latitude': _latitude,
+          'longitude': _longitude
         }),
       );
+
+      print(_nameController.text);
+      print(_emailController.text);
+      print(_passwordController.text);
+     print(_phoneController.text);
+      print(_addressController.text);
+      print(_selectedSectors);
 
       if (response.statusCode == 201) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -79,6 +136,17 @@ class _SignuporgState extends State<Signuporg> {
         await prefs.setString('auth_token', jwtToken);
         await prefs.setString('uid', userId);
         await prefs.setString('role', 'org');
+
+         await FirebaseFirestore.instance.collection('Ngo').doc(userId).set({
+        'uid': userId,
+        'name': _nameController.text,
+        'email': _emailController.text,
+        'address': _addressController.text,
+        'phone': _phoneController.text,
+        'sectors': _selectedSectors,
+        'description': _descriptionController.text,
+        'created_at': Timestamp.now(),
+      });
 
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => Homepage()));

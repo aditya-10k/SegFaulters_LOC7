@@ -363,28 +363,6 @@ class _CorpProfileState extends State<CorpProfile> {
                   ),
                 ],
               ),
-              SizedBox(height: 20),
-              Row(
-                children: [
-                  Text(
-                    'Location: ',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 22, // Increase font size
-                      fontFamily: 'PixelyB', // Set the font family to PixelyB
-                    ),
-                  ),
-                  Spacer(),
-                  Text(
-                    '${corporationData!.location.type} (${corporationData!.location.coordinates.join(', ')})',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 22, // Increase font size
-                      fontFamily: 'PixelyB', // Set the font family to PixelyB
-                    ),
-                  ),
-                ],
-              ),
             ],
           ),
 
@@ -546,10 +524,7 @@ class _OrgProfileState extends State<OrgProfile> {
                     _buildInfoRow('Address:', ngoData!.address),
                     _buildInfoRow('Sectors:', ngoData!.sectors.join(', ')),
                     _buildInfoRow('Description:', ngoData!.description ?? "N/A"),
-                    _buildInfoRow(
-                      'Location:',
-                      '${ngoData!.location.type} (${ngoData!.location.coordinates.join(', ')})',
-                    ),
+                    
                   ],
                 ),
               SizedBox(height: 20),
