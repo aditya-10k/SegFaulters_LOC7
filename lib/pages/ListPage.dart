@@ -46,127 +46,195 @@ class OrgListPage extends StatelessWidget {
   const OrgListPage({super.key, required this.uid});
 
   // Add a new listing
-  Future<void> _addListing(BuildContext context) async {
-    TextEditingController titleController = TextEditingController();
-    TextEditingController descriptionController = TextEditingController();
-    TextEditingController fundingController = TextEditingController();
-    TextEditingController volunteerController = TextEditingController();
+Future<void> _addListing(BuildContext context) async {
+  TextEditingController titleController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+  TextEditingController fundingController = TextEditingController();
+  TextEditingController volunteerController = TextEditingController();
 
-    await showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text("Add New Listing"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                  controller: titleController,
-                  decoration: InputDecoration(labelText: "Title")),
-              TextField(
-                  controller: descriptionController,
-                  decoration: InputDecoration(labelText: "Description")),
-              TextField(
-                  controller: fundingController,
-                  decoration: InputDecoration(labelText: "Funding Required"),
-                  keyboardType: TextInputType.number),
-              TextField(
-                  controller: volunteerController,
-                  decoration: InputDecoration(labelText: "Volunteers Required"),
-                  keyboardType: TextInputType.number),
-            ],
-          ),
-          actions: [
-            TextButton(
-                onPressed: () => Navigator.pop(context), child: Text("Cancel")),
-            ElevatedButton(
-              onPressed: () async {
-                if (titleController.text.isNotEmpty &&
-                    descriptionController.text.isNotEmpty) {
-                  FirebaseFirestore.instance
-                      .collection("Ngo")
-                      .doc(uid)
-                      .collection("listing")
-                      .add({
-                    "title": titleController.text,
-                    "description": descriptionController.text,
-                    "fundingRequired": fundingController.text,
-                    "uid": uid,
-                    "isCommitted": false,
-                    "timestamp": FieldValue.serverTimestamp(),
-                  });
-                  Navigator.pop(context);
-                }
-              },
-              child: Text("Add"),
+  await showModalBottomSheet(
+    context: context,
+    isScrollControlled: true, // Allow content to be scrollable
+    builder: (context) {
+      return Container(
+        padding: EdgeInsets.all(16.0), // Padding for better spacing
+        width: 700, // Set width to full screen
+        height: 400,
+        child: Column(
+          mainAxisSize: MainAxisSize.min, // Ensure content size adapts
+          children: [
+            Text(
+              "Add New Listing",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,fontFamily: 'PixelyB'),
+            ),
+            SizedBox(height: 16),
+            TextField(
+              controller: titleController,
+              decoration: InputDecoration(
+                 labelStyle: TextStyle(
+                  color: Colors.black,
+                  fontFamily: 'PixelyB'
+                ),labelText: "Title"),
+            ),
+            SizedBox(height: 16),
+            TextField(
+              controller: descriptionController,
+              decoration: InputDecoration(
+                 labelStyle: TextStyle(
+                  color: Colors.black,
+                  fontFamily: 'PixelyB'
+                ),labelText: "Description"),
+            ),
+            SizedBox(height: 16),
+            TextField(
+              controller: fundingController,
+              decoration: InputDecoration( labelStyle: TextStyle(
+                  color: Colors.black,
+                  fontFamily: 'PixelyB'
+                ),labelText: "Funding Required"),
+              keyboardType: TextInputType.number,
+            ),
+            SizedBox(height: 16),
+            TextField(
+              controller: volunteerController,
+              decoration: InputDecoration( labelStyle: TextStyle(
+                  color: Colors.black,
+                  fontFamily: 'PixelyB'
+                ),labelText: "Volunteers Required"),
+              keyboardType: TextInputType.number,
+            ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text("Cancel", style: TextStyle(fontFamily: 'PixelyB',color: Colors.black),),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    if (titleController.text.isNotEmpty &&
+                        descriptionController.text.isNotEmpty) {
+                      FirebaseFirestore.instance.collection("Ngo").doc(uid).collection("listing").add({
+                        "title": titleController.text,
+                        "description": descriptionController.text,
+                        "fundingRequired": fundingController.text,
+                        "volunteersRequired": volunteerController.text,
+                        "uid": uid,
+                        "isCommitted": false,
+                        "timestamp": FieldValue.serverTimestamp(),
+                      });
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: Text("Add",style: TextStyle(fontFamily: 'PixelyB',color: Colors.black),),
+                ),
+              ],
             ),
           ],
-        );
-      },
-    );
-  }
+        ),
+      );
+    },
+  );
+}
+
 
   // Edit a listing
-  Future<void> _editListing(
-      BuildContext context,
-      String docId,
-      String currentTitle,
-      String currentDescription,
-      String currentFunding) async {
-    TextEditingController titleController =
-        TextEditingController(text: currentTitle);
-    TextEditingController descriptionController =
-        TextEditingController(text: currentDescription);
-    TextEditingController fundingController =
-        TextEditingController(text: currentFunding);
+ Future<void> _editListing(
+    BuildContext context,
+    String docId,
+    String currentTitle,
+    String currentDescription,
+    String currentFunding) async {
+  TextEditingController titleController =
+      TextEditingController(text: currentTitle);
+  TextEditingController descriptionController =
+      TextEditingController(text: currentDescription);
+  TextEditingController fundingController =
+      TextEditingController(text: currentFunding);
 
-    await showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text("Edit Listing"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                  controller: titleController,
-                  decoration: InputDecoration(labelText: "Title")),
-              TextField(
-                  controller: descriptionController,
-                  decoration: InputDecoration(labelText: "Description")),
-              TextField(
-                  controller: fundingController,
-                  decoration: InputDecoration(labelText: "Funding Required"),
-                  keyboardType: TextInputType.number),
-            ],
-          ),
-          actions: [
-            TextButton(
-                onPressed: () => Navigator.pop(context), child: Text("Cancel")),
-            ElevatedButton(
-              onPressed: () async {
-                if (titleController.text.isNotEmpty &&
-                    descriptionController.text.isNotEmpty) {
-                  FirebaseFirestore.instance
-                      .collection("Ngo")
-                      .doc(uid)
-                      .collection("listing")
-                      .doc(docId)
-                      .update({
-                    "title": titleController.text,
-                    "description": descriptionController.text,
-                    "fundingRequired": fundingController.text,
-                  });
-                  Navigator.pop(context);
-                }
-              },
-              child: Text("Save"),
+  await showModalBottomSheet(
+    context: context,
+    isScrollControlled: true, // Allow content to be scrollable
+    builder: (context) {
+      return Container(
+        padding: EdgeInsets.all(16.0), // Padding for better spacing
+        width: MediaQuery.of(context).size.width * 0.9, // Adjust width to 90% of the screen width
+        child: Column(
+          mainAxisSize: MainAxisSize.min, // Ensure content size adapts
+          children: [
+            Text(
+              "Edit Listing",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,fontFamily: 'PixelyB'),
+            ),
+            SizedBox(height: 16),
+            TextField(
+              controller: titleController,
+              decoration: InputDecoration(
+                labelStyle: TextStyle(
+                  color: Colors.black,
+                  fontFamily: 'PixelyB'
+                ),
+                labelText: "Title"),
+            ),
+            TextField(
+              controller: descriptionController,
+              decoration: InputDecoration(
+                labelStyle: TextStyle(
+                  color: Colors.black,
+                  fontFamily: 'PixelyB'
+                ),
+                labelText: "Description"),
+            ),
+            TextField(
+              controller: fundingController,
+              decoration: InputDecoration(
+                labelStyle: TextStyle(
+                  color: Colors.black,
+                  fontFamily: 'PixelyB'
+                ),
+                labelText: "Funding Required"),
+              keyboardType: TextInputType.number,
+            ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text("Cancel", style: TextStyle(fontFamily: 'PixelyB',color: Colors.black),),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    if (titleController.text.isNotEmpty &&
+                        descriptionController.text.isNotEmpty) {
+                      FirebaseFirestore.instance
+                          .collection("Ngo")
+                          .doc(uid)
+                          .collection("listing")
+                          .doc(docId)
+                          .update({
+                        "title": titleController.text,
+                        "description": descriptionController.text,
+                        "fundingRequired": fundingController.text,
+                      });
+                      Navigator.pop(context);
+                      titleController.clear();
+                      descriptionController.clear();
+                      fundingController.clear();
+                    }
+                  },
+                  child: Text("Save",style: TextStyle(fontFamily: 'PixelyB',color: Colors.black),),
+                ),
+              ],
             ),
           ],
-        );
-      },
-    );
-  }
+        ),
+      );
+    },
+  );
+}
+
 
   // Delete a listing
   Future<void> _deleteListing(String docId) async {
@@ -242,14 +310,15 @@ class OrgListPage extends StatelessWidget {
                         title: Text(data["title"],
                             style: TextStyle(
                                 color: Colors.white,
+                                fontFamily: 'PixelyB',
                                 fontWeight: FontWeight.bold)),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text("Description: ${data["description"]}",
-                                style: TextStyle(color: Colors.white70)),
+                                style: TextStyle(color: Colors.white70,fontFamily: 'PixelyB')),
                             Text("Funding: ₹${data["fundingRequired"]}",
-                                style: TextStyle(color: Colors.white70)),
+                                style: TextStyle(color: Colors.white70,fontFamily: 'PixelyB')),
                           ],
                         ),
                         trailing: Row(

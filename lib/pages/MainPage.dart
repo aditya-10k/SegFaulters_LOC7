@@ -461,22 +461,26 @@ class _OrgHomePageState extends State<OrgHomePage> {
       children: [
         Text(
           "NGO Home",
-          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white),
+          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white,fontFamily: 'PixelyB'),
         ),
         SizedBox(height: 20),
         Text(
           _locationMessage,
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.white ,fontFamily: 'PixelyB'),
         ),
         SizedBox(height: 20),
-        ElevatedButton(
-          onPressed: () {},
-          child: Text("NGO Features"),
-        ),
+        // ElevatedButton(
+        //   onPressed: () {},
+        //   child: Text("NGO Features"),
+        // ),
         SizedBox(height: 20),
-        Text("Nearby Corporates:"),
+        // Text("Nearby Corporates:"),
         _nearbyNGOs.isEmpty
-            ? Text("No nearby Corporates found.")
+            ? Text("No nearby corporates",
+            style: TextStyle(
+              fontFamily: 'PixelyB',
+              color: Colors.white
+            ),)
             : ListView.builder(
                 shrinkWrap: true,
                 itemCount: _nearbyNGOs.length,
